@@ -1,0 +1,27 @@
+version: '3'
+services:
+  db:
+    image: mysql:8.0 # or lates:
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: root
+    volumes:
+      - db-data:/var/lib/mysql
+    command: --default-authentication-plugin=mysql_native_password #mysql8ではdefaultの認証方式の変更により--default-authentication-plugin=mysql_native_passwordを指定してやる必要がある
+    ports:
+      - "4306:3306"
+      
+  web:
+    tty: true          #コンテナ上でbinding.pryするために必要
+    stdin_open: true   #コンテナ上でbinding.pryするために必要
+    build: .
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    volumes:
+      - .:/myapp
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+volumes:
+  db-data:
+  bundle-data:

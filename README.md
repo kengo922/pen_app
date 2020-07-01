@@ -5,4 +5,4 @@
 ### Rails version
 - 6.0.3
 ### MySQL version
- - 8.0
+ - 8.0.20 

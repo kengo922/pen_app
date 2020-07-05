@@ -3,10 +3,9 @@
 # Defines a single server with a list of roles and multiple properties.
 # You can define all roles on a single server, or split them:
 
-server '3.115.64.82', user: 'kengo', roles: %w{app db web}
+server '3.115.64.82', user: 'ec2-user', roles: %w{app db web}
 # server "example.com", user: "deploy", roles: %w{app web}, other_property: :other_value
 # server "db.example.com", user: "deploy", roles: %w{db}
-set :ssh_options, auth_methods: ['publickey'],keys: ['~/.ssh/myapp_key_rsa']
 
 # role-based syntax
 # ==================

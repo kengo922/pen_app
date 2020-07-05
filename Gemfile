@@ -14,6 +14,7 @@ gem 'jbuilder', '~> 2.7'
 gem 'bootsnap', '>= 1.4.2', require: false
 gem 'pry-rails'
 gem 'rails-i18n'
+gem 'dotenv-rails' # 環境変数の管理をするgem
 
 
 group :development, :test do
@@ -28,6 +29,17 @@ group :development, :test do
   gem "selenium-webdriver"
   gem 'rspec-its' # its メソッドga使用可能となる。
   gem 'rspec_junit_formatter'
+
+  #デプロイ関連
+  # gem 'capistrano'
+  # gem 'capistrano-bundler'
+  # gem 'capistrano-rails'
+  # gem 'capistrano-rbenv'
+  # gem 'capistrano3-unicorn'
+end
+
+group :production do
+  gem 'unicorn'
 end
 
 group :development do
@@ -36,3 +48,5 @@ group :development do
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
 end
+
+

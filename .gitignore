@@ -37,3 +37,4 @@ yarn-debug.log*
 .DC_Store
 /vender/bundle
 /.idea
+.env

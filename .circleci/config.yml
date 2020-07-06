@@ -1,6 +1,8 @@
 version: 2
-jobs:
-  build:
+
+executors:
+  default:
+    working_directory: ~/repo
     docker:
     - image: circleci/ruby:2.7.1-node-browsers
       environment:
@@ -12,9 +14,10 @@ jobs:
         - MYSQL_ALLOW_EMPTY_PASSWORD: 'true'
         - MYSQL_ROOT_HOST: '127.0.0.1'
 
-    working_directory: ~/myapp  #自身のアプリディレクトリ名を設定
+    # working_directory: ~/myapp  #自身のアプリディレクトリ名を設定
     # 実行ディレクトリを設定する。デフォルトは ~/project
-
+commands:
+  setup:
     # CI環境上で動作させるコマンドや実行結果の保存、キャッシュ操作などを設定する
     steps:
     - checkout
@@ -37,13 +40,15 @@ jobs:
     # Database setup
     - run: mv ./config/database.yml.ci ./config/database.yml
 
+
     # Database setup
     - run:
         name: Databasesetup
         command: |
            bundle exec rake db:create
-           bundle exec rake db:schema:load
-    # run tests!
+           bundle exec rake db:schema:load\
+
+    # rspecの実行
     - run:
         name: Run rspec
         command: |
@@ -61,17 +66,32 @@ jobs:
         path: /tmp/test-results
     - store_artifacts: # ログやカバレッジ、jarファイルなどのバイナリをS3にアップロードして保管する(3GBまで)。アップロードされたファイルはCircleCIのWeb-UI上で確認できる。
         path: /tmp/test-results
-        destination: test-
+        destination: test-results
 
+# デプロイ
+deploy:
+  executor: default
+  steps:
+    - setup
     - add_ssh_keys:
         fingerprints:
-          - "XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX"
+          - "d4:37:9a:e8:f3:f7:70:bb:c9:1d:9e:f9:4b:ce:b0:f1"
 
     - deploy:
         name: Capistrano deploy
         command:
           bundle exec cap production deploy
 
+workflows:
+  test_and_deploy:
+    jobs:
+      - test
+      - deploy:
+          requires:
+            - test
+          filters:
+            branches:
+              only: master
 # un: コマンドを実行する
 # name: 任意のrunの名前
 # command: コマンドを設定する

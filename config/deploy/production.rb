@@ -3,7 +3,7 @@
 # Defines a single server with a list of roles and multiple properties.
 # You can define all roles on a single server, or split them:
 
-server ENV['SERVICE_NAME_PRODUCTION_IP'], user: 'kengo', roles: [:app, :web, :db], primary: true
+server ENV['SERVICE_NAME_PRODUCTION_IP'], user: 'ec2-user', roles: [:app, :web, :db], primary: true
 
 # set :ssh_options,  keys: ["#{ENV['SERVICE_NAME_PRODUCTION_SSH_KEY']}"]
 

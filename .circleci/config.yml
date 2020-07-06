@@ -38,6 +38,7 @@ jobs:
       RAILS_ENV: test
     steps:
     # Database setup
+      - setup
       - run: mv ./config/database.yml.ci ./config/database.yml
 
       - run:
@@ -70,10 +71,13 @@ jobs:
           path: /tmp/test-results
           destination: test-results
 
+  deploy:
+    executor: default
+    steps:
+      - setup
       - add_ssh_keys:
           fingerprints:
             - "d4:37:9a:e8:f3:f7:70:bb:c9:1d:9e:f9:4b:ce:b0:f1"
-
       - deploy:
           name: Capistrano deploy
           command:

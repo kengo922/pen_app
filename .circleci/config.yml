@@ -67,6 +67,11 @@ jobs:
       fingerprints:
         - "XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX"
 
+    - deploy:
+      name: Capistrano deploy
+      command:
+        bundle exec cap production deploy
+
 # un: コマンドを実行する
 # name: 任意のrunの名前
 # command: コマンドを設定する

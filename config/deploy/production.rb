@@ -3,7 +3,14 @@
 # Defines a single server with a list of roles and multiple properties.
 # You can define all roles on a single server, or split them:
 
-server '3.115.64.82', user: 'kengo', roles: %w{app db web}
+server ENV['SERVICE_NAME_PRODUCTION_IP'], port: 22, roles: [:app, :web, :db], primary: true
+
+set :ssh_options, {
+    forward_agent: true,
+    user: fetch(:user),
+    keys: ["#{ENV['SERVICE_NAME_PRODUCTION_SSH_KEY']}"]
+}
+
 # server "example.com", user: "deploy", roles: %w{app web}, other_property: :other_value
 # server "db.example.com", user: "deploy", roles: %w{db}
 

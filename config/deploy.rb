@@ -15,7 +15,7 @@ set :rbenv_type, :user
 set :rbenv_ruby, '2.7.1'
 
 # どの公開鍵を利用してデプロイするか
-set :ssh_options, auth_methods: ['publickey'],keys: ['~/.ssh/myapp_key_rsa']
+# set :ssh_options, auth_methods: ['publickey'],keys: ['~/.ssh/myapp.pem']
 
 # プロセス番号を記載したファイルの場所
 set :unicorn_pid, -> { "#{shared_path}/tmp/pids/unicorn.pid" }
@@ -30,4 +30,14 @@ namespace :deploy do
   task :restart do
     invoke 'unicorn:restart'
   end
+
+  desc 'upload master.key'
+  task :upload do
+    on roles(:app) do |_host|
+      execute "mkdir -p #{shared_path}/config" if test "[ ! -d #{shared_path}/config ]"
+      # upload!('config/master.key', "#{shared_path}/config/master.key")
+    end
+  end
+  before :starting, 'deploy:upload'
+  after :finishing, 'deploy:cleanup'
 end

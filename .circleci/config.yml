@@ -64,13 +64,13 @@ jobs:
         destination: test-
 
     - add_ssh_keys:
-      fingerprints:
-        - "XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX"
+        fingerprints:
+          - "XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX"
 
     - deploy:
-      name: Capistrano deploy
-      command:
-        bundle exec cap production deploy
+        name: Capistrano deploy
+        command:
+          bundle exec cap production deploy
 
 # un: コマンドを実行する
 # name: 任意のrunの名前

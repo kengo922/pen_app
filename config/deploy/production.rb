@@ -3,7 +3,7 @@
 # Defines a single server with a list of roles and multiple properties.
 # You can define all roles on a single server, or split them:
 
-server ENV['SERVICE_NAME_PRODUCTION_IP'], user: 'kengo', roles: %w{app db web}
+server '3.115.64.82', user: 'kengo', roles: %w{app db web}
 
 set :ssh_options, {
   port: 22,

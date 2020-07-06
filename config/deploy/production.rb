@@ -4,12 +4,12 @@
 # You can define all roles on a single server, or split them:
 
 server ENV['SERVICE_NAME_PRODUCTION_IP'],
-   user: "ec2-user",
+   user: "kengo",
    roles: %w{web db app},
    ssh_options: {
-       port: 22022,
-       user: "ec2-user", # overrides user setting above
-       keys: %w(~/.ssh/myapp.pem),
+       port: 22,
+       user: "kengo", # overrides user setting above
+       keys: %w(~/.ssh/myapp_key_rsa),
        forward_agent: true
 #     auth_methods: %w(publickey password)
 #     # password: "please use keys"

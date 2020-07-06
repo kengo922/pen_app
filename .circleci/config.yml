@@ -41,8 +41,8 @@ jobs:
     - run:
         name: Databasesetup
         command: |
-           bundle exec rake db:create
-           bundle exec rake db:schema:load
+          bundle exec rake db:create
+          bundle exec rake db:schema:load
     # run tests!
     - run:
         name: Run rspec
@@ -61,11 +61,14 @@ jobs:
         path: /tmp/test-results
     - store_artifacts: # ログやカバレッジ、jarファイルなどのバイナリをS3にアップロードして保管する(3GBまで)。アップロードされたファイルはCircleCIのWeb-UI上で確認できる。
         path: /tmp/test-results
-        destination: test-
+        destination: test-results
 
-    - add_ssh_keys:
-        fingerprints:
-          - "d4:37:9a:e8:f3:f7:70:bb:c9:1d:9e:f9:4b:ce:b0:f1"
+    # - add_ssh_keys:
+    #     fingerprints:
+    - run:
+        name: sshlogin
+        command: |
+          ssh -i ~/.ssh/${PEM} ${USER}@${SERVICE_NAME_PRODUCTION_IP}
 
     - deploy:
         name: Capistrano deploy

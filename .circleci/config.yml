@@ -12,7 +12,7 @@ jobs:
         - MYSQL_ALLOW_EMPTY_PASSWORD: 'true'
         - MYSQL_ROOT_HOST: '127.0.0.1'
 
-    working_directory: ~/myapp  #自身のアプリディレクトリ名を設定  
+    working_directory: ~/myapp  #自身のアプリディレクトリ名を設定
     # 実行ディレクトリを設定する。デフォルトは ~/project
 
     # CI環境上で動作させるコマンドや実行結果の保存、キャッシュ操作などを設定する
@@ -21,7 +21,7 @@ jobs:
     # CI環境上の working_directory の値の場所にGitリポジトリをコピーする。
     - restore_cache: #キャッシュが save_cache されていればリストアする(あれば速くなる)
         keys: #リストアするキャッシュを複数指定する。 (リストア: バックアップされたファイルやデータを使って、元の状態に戻すこと)
-        - v1-dependencies-{{ checksum "Gemfile.lock" }} 
+        - v1-dependencies-{{ checksum "Gemfile.lock" }}
         - v1-dependencies-
 
     - run:
@@ -62,7 +62,11 @@ jobs:
     - store_artifacts: # ログやカバレッジ、jarファイルなどのバイナリをS3にアップロードして保管する(3GBまで)。アップロードされたファイルはCircleCIのWeb-UI上で確認できる。
         path: /tmp/test-results
         destination: test-
-          
+
+    - add_ssh_keys:
+      fingerprints:
+        - "XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX"
+
 # un: コマンドを実行する
 # name: 任意のrunの名前
 # command: コマンドを設定する

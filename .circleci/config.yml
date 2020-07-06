@@ -2,20 +2,17 @@ version: 2
 
 executors:
   default:
-    working_directory: ~/repo
+    working_directory: ~/myapp #自身のアプリディレクトリ名を設定(デフォルトは ~/project)
     docker:
     - image: circleci/ruby:2.7.1-node-browsers
       environment:
         - BUNDLER_VERSION: 2.1.4
-        - RAILS_ENV: 'test'
     - image: circleci/mysql:8.0
       command: mysqld --default-authentication-plugin=mysql_native_password
       environment:
         - MYSQL_ALLOW_EMPTY_PASSWORD: 'true'
         - MYSQL_ROOT_HOST: '127.0.0.1'
 
-    # working_directory: ~/myapp  #自身のアプリディレクトリ名を設定
-    # 実行ディレクトリを設定する。デフォルトは ~/project
 commands:
   setup:
     # CI環境上で動作させるコマンドや実行結果の保存、キャッシュ操作などを設定する
@@ -26,7 +23,6 @@ commands:
         keys: #リストアするキャッシュを複数指定する。 (リストア: バックアップされたファイルやデータを使って、元の状態に戻すこと)
         - v1-dependencies-{{ checksum "Gemfile.lock" }}
         - v1-dependencies-
-
     - run:
         name: install dependencies
         command: |
@@ -37,18 +33,27 @@ commands:
         - ./vendor/bundle
         key: v1-dependencies-{{ checksum "Gemfile.lock" }}
 
+jobs:
+  test:
+    executor: default
+    environment:
+      RAILS_ENV: test
+
+    steps:
     # Database setup
     - run: mv ./config/database.yml.ci ./config/database.yml
 
-
-    # Database setup
     - run:
         name: Databasesetup
         command: |
            bundle exec rake db:create
-           bundle exec rake db:schema:load\
+           bundle exec rake db:schema:load
 
-    # rspecの実行
+    # - run:
+    #   name: Rubocop 静的コード解析を実行するgem
+    #   command: bundle exec rubocop
+
+    # run tests!
     - run:
         name: Run rspec
         command: |
@@ -68,11 +73,6 @@ commands:
         path: /tmp/test-results
         destination: test-results
 
-# デプロイ
-deploy:
-  executor: default
-  steps:
-    - setup
     - add_ssh_keys:
         fingerprints:
           - "d4:37:9a:e8:f3:f7:70:bb:c9:1d:9e:f9:4b:ce:b0:f1"
@@ -92,6 +92,7 @@ workflows:
           filters:
             branches:
               only: master
+
 # un: コマンドを実行する
 # name: 任意のrunの名前
 # command: コマンドを設定する
